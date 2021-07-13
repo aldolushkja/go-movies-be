@@ -31,19 +31,7 @@ func (app *application) getOneMovie(w http.ResponseWriter, r *http.Request) {
 		MPAARating:  "PG-13",
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now()}
-	//currentStatus := AppStatus{
-	//	Status:      "Available",
-	//	Environment: app.config.env,
-	//	Version:     version,
-	//}
-	//app.logger.Println("movie title is", movie.Title)
 	err = app.writeJSON(w, http.StatusOK, movie, "movie")
-	//if err != nil {
-	//	app.logger.Println(err)
-	//}
-	//w.Header().Set("Content-Type", "application/json")
-	//w.WriteHeader(http.StatusOK)
-	//w.Write(js)
 }
 
 func (app *application) getAllMovies(w http.ResponseWriter, r *http.Request) {
