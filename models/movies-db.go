@@ -38,27 +38,34 @@ func (m *DBModel) Get(id int) (*Movie, error) {
 	}
 
 	//get the genres
-	//query = `
-	//	    select id, movie_id, genre_id , created_at, updated_at from movie_genre
-	//		where movie_id = $1
-	//	)
-	//`
+	query = `
+		    select 
+		           mg.id, mg.movie_id, mg.genre_id , g.genre_name 
+		    from 
+		         movies_genres mg
+		         left join genres g on mg.genre_id = g.id
+			where 
+			      mg.movie_id = $1
+	`
 
-	//rows, _ := m.DB.QueryContext(ctx, query, id)
-	//var currMovieGenre MovieGenre
-	//var movieGenres []MovieGenre
-	//rows.Scan(
-	//	&currMovieGenre.ID,
-	//	&currMovieGenre.MovieID,
-	//	&currMovieGenre.GenreID,
-	//	&currMovieGenre.GenreID,
-	//	&currMovieGenre.CreatedAt,
-	//	&currMovieGenre.UpdatedAt,
-	//)
-	//movie.MovieGenre = movieGenres
+	rows, _ := m.DB.QueryContext(ctx, query, id)
+	defer rows.Close()
 
-	//log.Println("---Current movie", movie)
-	//log.Println("---Current movieGenres", movieGenres)
+	var genres []MovieGenre
+	for rows.Next() {
+		var mg MovieGenre
+		err := rows.Scan(
+			&mg.ID,
+			&mg.MovieID,
+			&mg.GenreID,
+			&mg.Genre.GenreName,
+		)
+		if err != nil {
+			return nil, err
+		}
+		genres = append(genres, mg)
+	}
+	movie.MovieGenre = genres
 	return &movie, nil
 }
 
