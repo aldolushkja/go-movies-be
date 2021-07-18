@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -161,12 +162,14 @@ func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
+		log.Println(err)
 		app.errorJSON(w, err)
 		return
 	}
 
 	err = app.models.DB.DeleteMovie(id)
 	if err != nil {
+		log.Println(err)
 		app.errorJSON(w, err)
 		return
 	}
