@@ -160,6 +160,8 @@ func (app *application) editMovie(w http.ResponseWriter, r *http.Request) {
 func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 
+	// ps := r.Context().Value("params").(httprouter.Params)
+
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
 		log.Println(err)
@@ -184,7 +186,4 @@ func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
 		app.errorJSON(w, err)
 		return
 	}
-}
-
-func (app *application) searchMovies(w http.ResponseWriter, r *http.Request) {
 }

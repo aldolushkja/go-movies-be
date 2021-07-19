@@ -231,12 +231,21 @@ func (m *DBModel) DeleteMovie(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `delete from movies where id = $1 
+	query := `delete from movies_genres where movie_id = $1 
 			`
 	_, err := m.DB.ExecContext(ctx, query, id)
 
 	if err != nil {
 		return err
 	}
+
+	query = `delete from movies where id = $1 
+			`
+	_, err = m.DB.ExecContext(ctx, query, id)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
