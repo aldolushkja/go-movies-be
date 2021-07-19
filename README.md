@@ -14,3 +14,4 @@ Backend written in GO for the go-movies-ui project
 2. [PostgreSQL Drivers](github.com/lib/pq@v1.10.0) by PostgreSQL
 3. [JWT](github.com/pascaldekloe/jwt) by pascaldekloe
 4. [Bcrypt](golang.org/x/crypto/bcrypt) 
+5. [Alice](github.com/justinas/alice) by justinas
