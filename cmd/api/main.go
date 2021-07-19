@@ -6,11 +6,12 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
-	_ "github.com/lib/pq"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	_ "github.com/lib/pq"
 )
 
 const version = "1.0.0"
@@ -20,6 +21,9 @@ type config struct {
 	env  string
 	db   struct {
 		dsn string
+	}
+	jwt struct {
+		secret string
 	}
 }
 
@@ -41,6 +45,7 @@ func main() {
 	flag.IntVar(&cfg.port, "port", 4000, "Server port to listen on")
 	flag.StringVar(&cfg.env, "env", "development", "Application environment (development|production)")
 	flag.StringVar(&cfg.db.dsn, "dsn", "postgres://postgres:abc12345!@localhost:5433/go_movies?sslmode=disable", "Connection string for PostgreSQL database")
+	flag.StringVar(&cfg.jwt.secret, "jwt-secret", "cccf6f0334130a7010d62332c75b53e7d8cea715e52692b06e9cd41b05644be3", "JWT Secret")
 	flag.Parse()
 
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
