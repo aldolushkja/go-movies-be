@@ -15,3 +15,4 @@ Backend written in GO for the go-movies-ui project
 3. [JWT](github.com/pascaldekloe/jwt) by pascaldekloe
 4. [Bcrypt](golang.org/x/crypto/bcrypt) 
 5. [Alice](github.com/justinas/alice) by justinas
+6. [GraphQL](github.com/graphql-go/graphql) 
