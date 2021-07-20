@@ -91,6 +91,9 @@ var movieType = graphql.NewObject(
 			"runtime": &graphql.Field{
 				Type: graphql.Int,
 			},
+			"rating": &graphql.Field{
+				Type: graphql.Int,
+			},
 			"mpaa_rating": &graphql.Field{
 				Type: graphql.String,
 			},
@@ -99,6 +102,9 @@ var movieType = graphql.NewObject(
 			},
 			"updated_at": &graphql.Field{
 				Type: graphql.DateTime,
+			},
+			"poster": &graphql.Field{
+				Type: graphql.String,
 			},
 		},
 	},
