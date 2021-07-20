@@ -2,7 +2,11 @@ package main
 
 import (
 	"aldolushkja/go-movies-be/v2/models"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/graphql-go/graphql"
@@ -12,11 +16,11 @@ var movies []*models.Movie
 
 // graphql schema definition
 var fields = graphql.Fields{
-	"movie": graphql.Field{
+	"movie": &graphql.Field{
 		Type:        movieType,
 		Description: "Get movie by id",
 		Args: graphql.FieldConfigArgument{
-			"id": graphql.ArgumentConfig{
+			"id": &graphql.ArgumentConfig{
 				Type: graphql.Int,
 			},
 		},
@@ -32,7 +36,7 @@ var fields = graphql.Fields{
 			return nil, nil
 		},
 	},
-	"list": graphql.Field{
+	"list": &graphql.Field{
 		Type:        graphql.NewList(movieType),
 		Description: "Get all movies",
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
@@ -77,10 +81,35 @@ var movieType = graphql.NewObject(
 )
 
 func (app *application) moviesGraphQL(w http.ResponseWriter, r *http.Request) {
-	movies, _ = app.mmodels.DB.All()
+	movies, _ = app.models.DB.All()
 
 	q, _ := io.ReadAll(r.Body)
 	query := string(q)
 
-	log.println(query)
+	log.Println(query)
+
+	rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: fields}
+	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
+	schema, err := graphql.NewSchema(schemaConfig)
+	if err != nil {
+		app.errorJSON(w, errors.New("failed to create schema"))
+		log.Println(err)
+		return
+	}
+
+	params := graphql.Params{
+		Schema:        schema,
+		RequestString: query,
+	}
+	response := graphql.Do(params)
+	if len(response.Errors) > 0 {
+		app.errorJSON(w, errors.New(fmt.Sprintf("failed %+v", response.Errors)))
+		log.Println(err)
+		return
+	}
+
+	j, _ := json.MarshalIndent(response, "", "   ")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(j)
 }
