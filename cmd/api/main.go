@@ -44,12 +44,13 @@ func main() {
 
 	flag.IntVar(&cfg.port, "port", 4000, "Server port to listen on")
 	flag.StringVar(&cfg.env, "env", "development", "Application environment (development|production)")
-	flag.StringVar(&cfg.db.dsn, "dsn", "postgres://postgres:abc12345!@localhost:5433/go_movies?sslmode=disable", "Connection string for PostgreSQL database")
-	//flag.StringVar(&cfg.jwt.secret, "jwt-secret", "cccf6f0334130a7010d62332c75b53e7d8cea715e52692b06e9cd41b05644be3", "JWT Secret")
 	flag.Parse()
 
 	// read jwt secret from environment
 	cfg.jwt.secret = os.Getenv("GO_MOVIES_JWT")
+
+	// read db connection from environment
+	cfg.db.dsn = os.Getenv("GO_MOVIES_DSN")
 
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
 
